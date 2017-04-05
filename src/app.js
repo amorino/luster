@@ -1,8 +1,13 @@
 import OrbitControls from 'orbit-controls'
 import * as THREE from 'three'
+import Signal from 'signals'
 
-export default class App {
+export default class ThreeApp {
   constructor() {
+    this.events = {
+      render: new Signal(),
+      resize: new Signal(),
+    }
     this.canvas = document.getElementById('app')
     this.dpr = Math.min(1.5, window.devicePixelRatio)
     this.size = {
@@ -17,18 +22,13 @@ export default class App {
       canvas: this.canvas,
       antialias: true,
     })
+    this.init()
   }
 
   init() {
-    const { camera, scene, renderer, size } = this
+    const { camera, scene, renderer, size, resize, render } = this
     renderer.setPixelRatio(this.dpr)
     renderer.setSize(size.width, size.height)
-
-    const geometry = new THREE.BoxGeometry(1, 1, 1)
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-
-    this.cube = new THREE.Mesh(geometry, material)
-    scene.add(this.cube)
 
     camera.position.z = 5
     scene.add(camera)
@@ -37,24 +37,24 @@ export default class App {
       position: [camera.position.x, camera.position.y, camera.position.z],
     })
 
-    window.addEventListener('resize', this.resize)
+    window.addEventListener('resize', resize)
 
-    this._render()
+    render()
   }
 
   resize = () => {
-    const { size, renderer } = this
+    const { size, renderer, events } = this
     size.width = window.innerWidth
     size.height = window.innerHeight
+    events.resize.dispatch(size)
     renderer.setSize(size.width, size.height)
     this._updateProjectionMatrix()
   }
 
-  _render = () => {
-    const { cube, renderer, _render, camera, scene } = this
-    window.requestAnimationFrame(_render)
-    cube.rotation.x += 0.01
-    cube.rotation.y += 0.01
+  render = () => {
+    const { renderer, camera, scene, events, render } = this
+    window.requestAnimationFrame(render)
+    events.render.dispatch()
     this._updateProjectionMatrix()
     renderer.render(scene, camera)
   }
