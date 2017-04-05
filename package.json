@@ -28,7 +28,6 @@
   "homepage": "https://github.com/amorino/3js-webpack#readme",
   "dependencies": {
     "babel-polyfill": "^6.23.0",
-    "events": "^1.1.1",
     "glsl-hash-blur": "^1.0.3",
     "orbit-controls": "^1.1.2",
     "sanitize.css": "^5.0.0",
