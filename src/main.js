@@ -1,11 +1,15 @@
 import 'sanitize.css/sanitize.css'
 import Modernizr from 'modernizr'
 import * as THREE from 'three'
-import ThreeApp from 'app'
+import App from 'app'
 
 console.info(Modernizr)
 
-const app = new ThreeApp()
+const container = document.getElementById('app')
+
+const app = new App({
+  container,
+})
 
 const geometry = new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })

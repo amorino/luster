@@ -2,35 +2,62 @@ import OrbitControls from 'orbit-controls'
 import * as THREE from 'three'
 import Signal from 'signals'
 
-export default class ThreeApp {
-  constructor() {
+export default class App {
+  constructor({
+    container,
+    fov = 75,
+    near = 0.1,
+    far = 1000,
+    clearColor = 0x000000,
+    clearAlpha = 0,
+    target = new THREE.Vector3(),
+    position = new THREE.Vector3(0, 0, 5)
+  }) {
+    if (!container) {
+      console.error('You must pass a "container" DOM element')
+      return false
+    }
+
     this.events = {
       render: new Signal(),
       resize: new Signal(),
     }
-    this.canvas = document.getElementById('app')
+
     this.dpr = Math.min(1.5, window.devicePixelRatio)
+
     this.size = {
       width: window.innerWidth,
       height: window.innerHeight,
       aspect: window.innerWidth / window.innerHeight,
     }
-    this.camera = new THREE.PerspectiveCamera(75, this.size.aspect, 0.1, 1000)
-    this.target = new THREE.Vector3()
-    this.scene = new THREE.Scene()
-    this.renderer = new THREE.WebGLRenderer({
-      canvas: this.canvas,
+
+    this.camera = new THREE.PerspectiveCamera(fov, this.size.aspect, near, far)
+    this.target = target
+    this.position = position
+
+    const options = {
       antialias: true,
-    })
+    }
+
+    this.scene = new THREE.Scene()
+    this.renderer = new THREE.WebGLRenderer(options)
+
+    this.renderer.setClearColor(clearColor, clearAlpha)
+
+    container.appendChild(this.renderer.domElement)
+
     this.init()
   }
 
   init() {
-    const { camera, scene, renderer, size, resize, render } = this
+    const { camera, scene, renderer, size, resize, _render, position, target } = this
+
     renderer.setPixelRatio(this.dpr)
     renderer.setSize(size.width, size.height)
 
-    camera.position.z = 5
+    camera.position.copy(position)
+    camera.lookAt(target)
+
     scene.add(camera)
 
     this.controls = new OrbitControls({
@@ -39,7 +66,7 @@ export default class ThreeApp {
 
     window.addEventListener('resize', resize)
 
-    render()
+    _render()
   }
 
   resize = () => {
@@ -51,9 +78,9 @@ export default class ThreeApp {
     this._updateProjectionMatrix()
   }
 
-  render = () => {
-    const { renderer, camera, scene, events, render } = this
-    window.requestAnimationFrame(render)
+  _render = () => {
+    const { renderer, camera, scene, events, _render } = this
+    window.requestAnimationFrame(_render)
     events.render.dispatch()
     this._updateProjectionMatrix()
     renderer.render(scene, camera)
