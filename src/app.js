@@ -9,7 +9,7 @@ export default class App {
     near = 0.1,
     far = 1000,
     clearColor = 0x000000,
-    clearAlpha = 0,
+    clearAlpha = 1,
     target = new THREE.Vector3(),
     position = new THREE.Vector3(0, 0, 5)
   }) {
@@ -50,7 +50,8 @@ export default class App {
   }
 
   init() {
-    const { camera, scene, renderer, size, resize, _render, position, target } = this
+    const { camera, scene, renderer, size, position, target } = this
+    const { _resize, _render } = this
 
     renderer.setPixelRatio(this.dpr)
     renderer.setSize(size.width, size.height)
@@ -64,12 +65,12 @@ export default class App {
       position: [camera.position.x, camera.position.y, camera.position.z],
     })
 
-    window.addEventListener('resize', resize)
+    window.addEventListener('resize', _resize)
 
     _render()
   }
 
-  resize = () => {
+  _resize = () => {
     const { size, renderer, events } = this
     size.width = window.innerWidth
     size.height = window.innerHeight
@@ -79,7 +80,8 @@ export default class App {
   }
 
   _render = () => {
-    const { renderer, camera, scene, events, _render } = this
+    const { renderer, camera, scene, events } = this
+    const { _render } = this
     window.requestAnimationFrame(_render)
     events.render.dispatch()
     this._updateProjectionMatrix()

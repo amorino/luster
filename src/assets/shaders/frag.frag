@@ -15,10 +15,8 @@ vec3 sample(vec2 uv) {
 }
 
 void main() {
-  //the checker box
   vec3 colorA = vNorm * 0.5 + 0.5;
 
-  //our texture with halftone + hash blur
   float dist = length(vUv - 0.5);
   float falloff = smoothstep(0.3, 0.7, dist);
   float radius = TEXEL_SIZE * 40.0;
