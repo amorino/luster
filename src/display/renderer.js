@@ -2,7 +2,7 @@ import OrbitControls from 'orbit-controls'
 import * as THREE from 'three'
 import Signal from 'signals'
 
-export default class App {
+export default class Renderer {
   constructor({
     container,
     fov = 75,
