@@ -2403,7 +2403,7 @@ glsl-hash-blur@^1.0.3:
   dependencies:
     glsl-random "0.0.5"
 
-glsl-inject-defines@^1.0.1:
+glsl-inject-defines@^1.0.1, glsl-inject-defines@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/glsl-inject-defines/-/glsl-inject-defines-1.0.3.tgz#dd1aacc2c17fcb2bd3fc32411c6633d0d7b60fd4"
   dependencies:
@@ -2934,6 +2934,10 @@ isarray@0.0.1:
 isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
+
+ismobilejs@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/ismobilejs/-/ismobilejs-0.4.1.tgz#1a5f126c70fed39c93da380fa62cbae5723e7dc2"
 
 isobject@^2.0.0:
   version "2.1.0"
@@ -4157,8 +4161,8 @@ quat-from-unit-vec3@^1.0.0:
     gl-vec3 "^1.0.3"
 
 query-string@^4.1.0:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/query-string/-/query-string-4.3.2.tgz#ec0fd765f58a50031a3968c2431386f8947a5cdd"
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-4.3.4.tgz#bbb693b9ca915c232515b228b1a02b609043dbeb"
   dependencies:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"

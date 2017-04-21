@@ -33,7 +33,9 @@
     "no-return-assign": 0,
     "no-unused-expressions": 0,
     "comma-dangle": 0,
-    "no-underscore-dangle": 0
+    "no-underscore-dangle": 0,
+    "no-param-reassign": 0,
+    "no-plusplus": 0
   },
   "settings": {
     "import/resolver": {

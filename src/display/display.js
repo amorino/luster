@@ -2,12 +2,12 @@ import OrbitControls from 'orbit-controls'
 import * as THREE from 'three'
 import Signal from 'signals'
 
-export default class Renderer {
+export default class Display {
   constructor({
     container,
-    fov = 75,
-    near = 0.1,
-    far = 1000,
+    fieldOfView = 65,
+    near = 1,
+    far = 50,
     clearColor = 0x000000,
     clearAlpha = 1,
     target = new THREE.Vector3(),
@@ -18,33 +18,54 @@ export default class Renderer {
       return false
     }
 
+    // Create main events
     this.events = {
       render: new Signal(),
       resize: new Signal(),
     }
 
+    // Device Pixel Ratio
     this.dpr = Math.min(1.5, window.devicePixelRatio)
 
+    // Init Size
     this.size = {
       width: window.innerWidth,
       height: window.innerHeight,
       aspect: window.innerWidth / window.innerHeight,
     }
 
-    this.camera = new THREE.PerspectiveCamera(fov, this.size.aspect, near, far)
+    // Camera
+    this.camera = new THREE.PerspectiveCamera(fieldOfView, this.size.aspect, near, far)
     this.target = target
     this.position = position
 
+    // Renderer Options
     const options = {
-      antialias: true,
+      alpha: false,
+      stencil: false,
+      depth: true,
+      preserveDrawingBuffer: false,
+      antialias: false
     }
 
-    this.scene = new THREE.Scene()
+    // Renderer
     this.renderer = new THREE.WebGLRenderer(options)
-
     this.renderer.setClearColor(clearColor, clearAlpha)
 
+    // Main Scene
+    this.scene = new THREE.Scene()
+
+    // Append the canvas
     container.appendChild(this.renderer.domElement)
+
+    // Time utils
+    this.lastFrameTime = 0
+    this.residual = 0
+    this.lastTime = Date.now()
+
+    // Return time variables
+    this.deltaTime = 0
+    this.timestamp = 0
 
     this.init()
   }
@@ -63,10 +84,10 @@ export default class Renderer {
 
     this.controls = new OrbitControls({
       position: [camera.position.x, camera.position.y, camera.position.z],
+      distanceBounds: [0.5, 20],
     })
 
     window.addEventListener('resize', _resize)
-
     _render()
   }
 
@@ -81,9 +102,18 @@ export default class Renderer {
 
   _render = () => {
     const { renderer, camera, scene, events } = this
+    let { timestamp, deltaTime, lastTime } = this
     const { _render } = this
+
     window.requestAnimationFrame(_render)
-    events.render.dispatch()
+
+    const time = Date.now()
+    timestamp = time - lastTime
+    deltaTime = this._deltaTime(timestamp)
+
+    events.render.dispatch(timestamp, deltaTime)
+    lastTime = time
+
     this._updateProjectionMatrix()
     renderer.render(scene, camera)
   }
@@ -94,7 +124,7 @@ export default class Renderer {
     size.height = window.innerHeight
     size.aspect = size.width / size.height
 
-    // update camera controls
+    // Update camera controls
     controls.update()
     camera.position.fromArray(controls.position)
     camera.up.fromArray(controls.up)
@@ -103,6 +133,15 @@ export default class Renderer {
     // Update camera matrices
     camera.aspect = size.aspect
     camera.updateProjectionMatrix()
+  }
+
+  _deltaTime(timestamp) {
+    let deltaTime = timestamp - this.lastFrameTime
+    this.lastFrameTime = timestamp
+    deltaTime += this.residual
+    this.residual = deltaTime / 1000
+    deltaTime -= this.residual
+    return deltaTime
   }
 
 }
