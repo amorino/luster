@@ -6,8 +6,8 @@ import FogScene from 'core/FogScene'
 
 export default class World {
   constructor(container) {
-    this.app = new Display({
-      clearColor: 'rgb(40, 40, 40)',
+    this.display = new Display({
+      clearColor: 0xffffff,
       container,
     })
   }
@@ -20,7 +20,7 @@ export default class World {
   }
 
   _setupRenderer() {
-    const { renderer } = this.app
+    const { renderer } = this.display
 
     renderer.gammaFactor = 2.2
     renderer.gammaOutput = false
@@ -31,18 +31,11 @@ export default class World {
   }
 
   _setupFog() {
-    const { scene, events } = this.app
-    const fog = new FogScene(this.app)
+    const { scene, events } = this.display
+    const fog = new FogScene(this.display)
     scene.add(fog)
     events.render.add(fog.update)
 
-    return this
-  }
-
-  _setupLights() {
-    const { scene } = this.app
-
-    this.pointLights = lightCircle(['#fff', '#ff00ff', '#ff0000'], scene, true)
     return this
   }
 
@@ -53,13 +46,20 @@ export default class World {
     return this
   }
 
+  _setupLights() {
+    const { scene } = this.display
+
+    this.pointLights = lightCircle(['#fff', '#ff00ff', '#ff0000'], scene, true)
+    return this
+  }
+
   _setCube = () => {
-    const { scene, events } = this.app
+    const { scene, events } = this.display
 
     const geometry = new THREE.BoxGeometry(1, 1, 1)
 
     const material = new THREE.MeshPhongMaterial({
-      color: 0xff0000,
+      color: 0xffffff,
       emissiveIntensity: 0.3,
       shading: THREE.FlatShading,
       shininess: 40,

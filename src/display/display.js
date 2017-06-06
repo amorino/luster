@@ -24,6 +24,13 @@ export default class Display {
       resize: new Signal(),
     }
 
+    this.clearColor = clearColor
+    this.clearAlpha = clearAlpha
+
+    this.fieldOfView = fieldOfView
+    this.near = near
+    this.far = far
+
     // Device Pixel Ratio
     this.dpr = Math.min(1.5, window.devicePixelRatio)
 
@@ -35,7 +42,7 @@ export default class Display {
     }
 
     // Camera
-    this.camera = new THREE.PerspectiveCamera(fieldOfView, this.size.aspect, near, far)
+    this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.size.aspect, this.near, this.far)
     this.target = target
     this.position = position
 
@@ -50,7 +57,7 @@ export default class Display {
 
     // Renderer
     this.renderer = new THREE.WebGLRenderer(options)
-    this.renderer.setClearColor(clearColor, clearAlpha)
+    this.renderer.setClearColor(this.clearColor, this.clearAlpha)
 
     // Main Scene
     this.scene = new THREE.Scene()
@@ -67,10 +74,10 @@ export default class Display {
     this.deltaTime = 0
     this.timestamp = 0
 
-    this.init()
+    this._init()
   }
 
-  init() {
+  _init() {
     const { camera, scene, renderer, size, position, target } = this
     const { _resize, _render } = this
 
@@ -143,5 +150,4 @@ export default class Display {
     deltaTime -= this.residual
     return deltaTime
   }
-
 }

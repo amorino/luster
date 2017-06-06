@@ -23,7 +23,7 @@ void main() {
 
   #ifdef FLOAT_BUFFER
     // encode with zero depth
-    gl_FragColor = vec4(vec3(color, 0.0, 0.0), 1.0);
+    gl_FragColor = vec4(vec3(color, color, color), 1.0);
   #else
     gl_FragColor = encodeHDR(color);
   #endif
