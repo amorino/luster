@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amorino/3js-webpack.git"
+    "url": "git+https://github.com/amorino/luster.git"
   },
   "keywords": [
     "three.js",
@@ -23,9 +23,9 @@
   "author": "Erick Bazán",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/amorino/3js-webpack/issues"
+    "url": "https://github.com/amorino/luster/issues"
   },
-  "homepage": "https://github.com/amorino/3js-webpack#readme",
+  "homepage": "https://github.com/amorino/luster#readme",
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "defined": "^1.0.0",

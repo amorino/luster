@@ -1,5 +1,5 @@
 <div align='center'>
-  <h3>3js-webpack</h3>
+  <h3>Luster</h3>
 
   <p>Work in progress.</p>
 
