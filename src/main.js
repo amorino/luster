@@ -1,7 +1,7 @@
 import 'sanitize.css/sanitize.css'
 import Modernizr from 'modernizr'
 
-import World from 'engine/world'
+import World from 'engine/luster'
 
 console.info(Modernizr)
 

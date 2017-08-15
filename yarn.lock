@@ -4876,6 +4876,10 @@ text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
+three-effectcomposer-es6@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/three-effectcomposer-es6/-/three-effectcomposer-es6-0.0.4.tgz#da3471bac92c721845790e964e52835d5cbd8cf2"
+
 three-orbit-controls@~0.69.0:
   version "0.69.0"
   resolved "https://registry.yarnpkg.com/three-orbit-controls/-/three-orbit-controls-0.69.0.tgz#9d8707c083f4802b72beb369f4038dcb3bd8362f"
@@ -4890,9 +4894,9 @@ three-orbit-viewer@^69.3.1:
     three-orbit-controls "~0.69.0"
     xtend "^4.0.0"
 
-three@^0.84.0:
-  version "0.84.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.84.0.tgz#95be85a55a0fa002aa625ed559130957dcffd918"
+three@^0.86.0:
+  version "0.86.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.86.0.tgz#1c33e476a1537e9a8a18f5792d024b1046cd2000"
 
 through2@^0.6.3:
   version "0.6.5"

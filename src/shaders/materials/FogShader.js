@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import vertexShader from 'assets/shaders/fog/fog.vert'
-import fragmentShader from 'assets/shaders/fog/fog.frag'
+import vertexShader from 'shaders/glsl/fog/fog.vert'
+import fragmentShader from 'shaders/glsl/fog/fog.frag'
 import defined from 'defined'
 import injectDefines from 'glsl-inject-defines'
 import getContext from 'utils/context'

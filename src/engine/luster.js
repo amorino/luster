@@ -1,13 +1,15 @@
 import * as THREE from 'three'
 import Display from 'display/display'
+
 import factory from 'assets/images/factory.jpg'
 import lightCircle from 'utils/lights'
-import FogScene from 'core/FogScene'
+import FogScene from 'core/scenes/FogScene'
+
+import FX from 'post/fx'
 
 export default class World {
   constructor(container) {
     this.display = new Display({
-      clearColor: 0xffffff,
       container,
     })
   }
@@ -15,8 +17,15 @@ export default class World {
   init() {
     this
       ._setupRenderer()
-      ._setupFog()
+      ._setupLights()
+      ._setupFX()
+      ._setupScenes()
       ._loadTextures()
+  }
+
+  destroy() {
+    const { display } = this
+    display.destroy()
   }
 
   _setupRenderer() {
@@ -30,7 +39,17 @@ export default class World {
     return this
   }
 
-  _setupFog() {
+  _setupFX() {
+    const { display } = this
+    const { events } = display
+
+    this.fx = new FX(display)
+    events.render.add(this.fx.update)
+
+    return this
+  }
+
+  _setupScenes() {
     const { scene, events } = this.display
     const fog = new FogScene(this.display)
     scene.add(fog)
@@ -48,8 +67,7 @@ export default class World {
 
   _setupLights() {
     const { scene } = this.display
-
-    this.pointLights = lightCircle(['#fff', '#ff00ff', '#ff0000'], scene, true)
+    this.pointLights = lightCircle({ colors: ['#ff0000', '#ff00ff', '#ff0000'], scene, help: true })
     return this
   }
 
@@ -64,7 +82,7 @@ export default class World {
       shading: THREE.FlatShading,
       shininess: 40,
       polygonOffset: true,
-      polygonOffsetFactor: 1, // positive value pushes polygon further away
+      polygonOffsetFactor: 1,
       polygonOffsetUnits: 1
     })
 

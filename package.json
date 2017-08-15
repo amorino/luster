@@ -36,7 +36,8 @@
     "sanitize.css": "^5.0.0",
     "signals": "^1.0.0",
     "stylus": "^0.54.5",
-    "three": "^0.84.0",
+    "three": "^0.86.0",
+    "three-effectcomposer-es6": "^0.0.4",
     "three-orbit-viewer": "^69.3.1",
     "webpack": "^2.3.3"
   },
