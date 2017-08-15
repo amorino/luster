@@ -3,7 +3,7 @@ import Modernizr from 'modernizr'
 
 import World from 'engine/luster'
 
-console.info(Modernizr)
+console.warn('>> modernizr', Modernizr)
 
 const container = document.getElementById('app')
 const world = new World(container)

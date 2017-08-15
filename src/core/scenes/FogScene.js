@@ -30,7 +30,6 @@ export default class FogScene extends THREE.Object3D {
 
   _setupLights() {
     this.pointLights = ['#fff'].map((color, i, list) => {
-      console.log(list)
       // const t = i / list.length
       // const startAngle = Math.PI / 2
       // const angle = (Math.PI * 2 * t) + startAngle
