@@ -5,8 +5,8 @@ uniform vec3 pointLightPosition;
 uniform float pointLightDiffuse;
 uniform float fogLightStrength;
 
-#pragma glslify: encodeHDR = require('../encode-hdr.glsl');
-#pragma glslify: InScatter = require('../inscatter.glsl');
+#pragma glslify: encodeHDR = require('./encode-hdr.glsl');
+#pragma glslify: InScatter = require('./inscatter.glsl');
 
 void main() {
   float color = diffuse;

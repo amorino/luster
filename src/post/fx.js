@@ -1,20 +1,35 @@
-import * as THREE from 'three'
-import Nuke from 'post/nuke'
-import FXAA from 'post/passes/fxaa'
-import DOF from 'post/passes/dof'
-import SSAO from 'post/passes/ssao'
 import { ShaderPass, CopyShader } from 'three-effectcomposer-es6'
 
+import Nuke from './nuke'
+import FXAA from '../shaders/passes/fxaa'
+import DOF from '../shaders/passes/dof'
+import SSAO from '../shaders/passes/ssao'
+import overlay from '../assets/images/overlay.jpg'
+import { getTexture } from '../utils/3d'
+
 export default class FX {
+
+  passes = []
+
+  bokehParameters = {
+    focus: 0.003,
+    aperture: 1.6,
+    maxblur: 0.0065,
+    shape: 0.0
+  }
+
   constructor(display) {
     if (!display.renderer) console.error('FX :: Must define a renderer')
     this.display = display
     this._init()
   }
+
   _init() {
     this
-        ._setupNuke()
-        ._setupPasses()
+    ._setupNuke()
+    ._setupPasses()
+    ._setResolution()
+    ._addPasses()
   }
 
   _setupNuke() {
@@ -24,32 +39,53 @@ export default class FX {
   }
 
   _setupPasses() {
-    const { nuke } = this
+    const { nuke, passes } = this
     const { size, camera } = this.display
 
-    const parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter }
-    this.depthRenderTarget = new THREE.WebGLRenderTarget(size.width, size.height, parameters)
+    const FXAAShader = new FXAA()
+    this.fxaaPass = new ShaderPass(FXAAShader)
+    this.fxaaPass.active = true
+    passes.push(this.fxaaPass)
+
+    const DOFShader = new DOF({ size, camera })
+    this.dofPass = new ShaderPass(DOFShader)
+    this.dofPass.uniforms.tDepth.value = nuke.depthRenderTarget.texture
+    this.dofPass.uniforms.dirtMap.value = getTexture(overlay)
+    this.dofPass.uniforms.enableBlend.value = 1.0
+    this.dofPass.uniforms.enabled.value = 1.0
+    this.dofPass.active = true
+    passes.push(this.dofPass)
 
     const SAOOShader = SSAO
     this.ssaoPass = new ShaderPass(SAOOShader)
-    nuke.add(this.ssaoPass)
-    this.ssaoPass.uniforms.tDepth.value = this.depthRenderTarget.texture
+    this.ssaoPass.uniforms.tDepth.value = nuke.depthRenderTarget.texture
     this.ssaoPass.uniforms.size.value.set(size.width, size.height)
     this.ssaoPass.uniforms.cameraNear.value = camera.near
     this.ssaoPass.uniforms.cameraFar.value = camera.far
     this.ssaoPass.uniforms.onlyAO.value = 0
     this.ssaoPass.uniforms.aoClamp.value = 3.0
     this.ssaoPass.uniforms.lumInfluence.value = 0.8
+    this.ssaoPass.active = true
+    passes.push(this.ssaoPass)
 
-    const FXAAShader = new FXAA()
-    this.fxaaPass = new ShaderPass(FXAAShader)
-    nuke.add(this.fxaaPass)
-    this.fxaaPass.uniforms.resolution.value.set(size.width, size.height)
+    return this
+  }
 
-    const DOFShader = new DOF({ size })
-    this.dofPass = new ShaderPass(DOFShader)
-    nuke.add(this.dofPass)
-    this.dofPass.uniforms.resolution.value.set(size.width, size.height)
+  _setResolution() {
+    const { passes } = this
+    const { size } = this.display
+    passes.forEach((pass) => {
+      if (pass.uniforms.resolution) pass.uniforms.resolution.value.set(size.width, size.height)
+    })
+
+    return this
+  }
+
+  _addPasses() {
+    const { nuke } = this
+    this.passes.forEach((pass) => {
+      if (pass.active) nuke.add(pass)
+    })
 
     const copyPass = new ShaderPass(CopyShader)
     nuke.add(copyPass)
@@ -57,8 +93,11 @@ export default class FX {
     return this
   }
 
-  update = () => {
-    const { nuke, depthRenderTarget } = this
-    nuke.update(depthRenderTarget)
+  update = (t) => {
+    const { nuke } = this
+    nuke.update()
+    this.passes.forEach((pass) => {
+      if (pass.uniforms.time) pass.uniforms.time.value = t / 1000
+    })
   }
 }

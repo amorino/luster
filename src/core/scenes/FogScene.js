@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import FogShader from 'shaders/materials/FogShader'
+import FogShader from '../../shaders/materials/FogShader'
 
 export default class FogScene extends THREE.Object3D {
   constructor(app) {

@@ -7,6 +7,9 @@ import FogScene from 'core/scenes/FogScene'
 
 import FX from 'post/fx'
 
+import fragmentShader from '../shaders/glsl/ice.frag'
+import vertexShader from '../shaders/glsl/ice.vert'
+
 export default class World {
   constructor(container) {
     this.display = new Display({
@@ -76,15 +79,23 @@ export default class World {
 
     const geometry = new THREE.BoxGeometry(1, 1, 1)
 
-    const material = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
-      emissiveIntensity: 0.3,
-      shading: THREE.FlatShading,
-      shininess: 40,
-      polygonOffset: true,
-      polygonOffsetFactor: 1,
-      polygonOffsetUnits: 1
-    })
+    const uniforms = Object.assign({},
+      THREE.ShaderLib.standard.uniforms, {
+        time: { type: 'f', value: 0 },
+        thicknessMap: { type: 't', value: new THREE.Texture() },
+        thicknessRepeat: { type: 'v3', value: new THREE.Vector2() },
+        thicknessPower: { type: 'f', value: 20 },
+        thicknessScale: { type: 'f', value: 4 },
+        thicknessDistortion: { type: 'f', value: 0.185 },
+        thicknessAmbient: { type: 'f', value: 0.0 },
+      }
+    )
+
+    const material = new THREE.MeshStandardMaterial()
+    material.uniforms = uniforms
+
+    material.vertexShader = vertexShader
+    material.fragmentShader = fragmentShader
 
     const cube = new THREE.Mesh(geometry, material)
     scene.add(cube)

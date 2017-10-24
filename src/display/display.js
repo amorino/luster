@@ -3,9 +3,29 @@ import * as THREE from 'three'
 import Signal from 'signals'
 
 export default class Display {
+  size = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    aspect: window.innerWidth / window.innerHeight,
+    halfX: window.innerWidth / 2,
+    helfY: window.innerHeight / 2,
+  }
+
+  rendererOptions = {
+    alpha: false,
+    stencil: false,
+    depth: true,
+    preserveDrawingBuffer: false,
+    antialias: false
+  }
+
+  nuke = false
+
+  dpr = Math.min(1)
+
   constructor({
     container,
-    fieldOfView = 65,
+    fieldOfView = 30,
     near = 1,
     far = 50,
     clearColor = 0x0,
@@ -30,35 +50,14 @@ export default class Display {
     this.near = near
     this.far = far
 
-    // Device Pixel Ratio
-    this.dpr = Math.min(1)
-
-    // Init Size
-    this.size = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-      aspect: window.innerWidth / window.innerHeight,
-      halfX: window.innerWidth / 2,
-      helfY: window.innerHeight / 2,
-    }
-
     this.target = target
     this.position = position
 
     // Camera
     this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.size.aspect, this.near, this.far)
 
-    // Renderer Options
-    const options = {
-      alpha: false,
-      stencil: false,
-      depth: true,
-      preserveDrawingBuffer: false,
-      antialias: false
-    }
-
     // Renderer
-    this.renderer = new THREE.WebGLRenderer(options)
+    this.renderer = new THREE.WebGLRenderer(this.rendererOptions)
     this.renderer.setClearColor(this.clearColor, this.clearAlpha)
 
     // Main Scene
@@ -75,8 +74,6 @@ export default class Display {
     // Return time variables
     this.deltaTime = 0
     this.timestamp = 0
-
-    this.nuke = false
 
     this._init()
   }
@@ -101,9 +98,10 @@ export default class Display {
     renderer.setPixelRatio(this.dpr)
     renderer.setSize(size.width, size.height)
 
+    renderer.nuke = false
+
     camera.position.copy(position)
     camera.lookAt(target)
-
     scene.add(camera)
 
     this.controls = new OrbitControls({
@@ -142,19 +140,20 @@ export default class Display {
 
     events.render.dispatch(timestamp, deltaTime)
     lastTime = time
+
     if (!renderer.nuke) renderer.render(scene, camera)
   }
 
   _updateProjectionMatrix() {
-    const { size, controls, camera } = this
+    const { size, controls, camera, target } = this
 
-    // Update camera controls
-    controls.update()
-    camera.position.fromArray(controls.position)
-    camera.up.fromArray(controls.up)
-    camera.lookAt(this.target.fromArray(controls.direction))
+    if (controls) {
+      controls.update()
+      camera.position.fromArray(controls.position)
+      camera.up.fromArray(controls.up)
+      camera.lookAt(target.fromArray(controls.direction))
+    }
 
-    // Update camera matrices
     camera.aspect = size.aspect
     camera.updateProjectionMatrix()
   }
