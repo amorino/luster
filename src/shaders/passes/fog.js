@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import defined from 'defined'
 import injectDefines from 'glsl-inject-defines'
-import vertexShader from '../../shaders/glsl/fog.vert'
-import fragmentShader from '../../shaders/glsl/fog.frag'
+import vertexShader from '../glsl/fog.vert'
+import fragmentShader from '../glsl/fog.frag'
 import getContext from '../../utils/context'
 
 export default class FogShader extends THREE.ShaderMaterial {

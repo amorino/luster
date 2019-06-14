@@ -3,7 +3,6 @@ import { remove } from 'lodash'
 import * as THREE from 'three'
 
 export default class Nuke {
-
     renderTargetParameters = {
         minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
@@ -71,5 +70,4 @@ export default class Nuke {
         composer.passes.forEach((p) => { p.renderToScreen = false })
         composer.passes[composer.passes.length - 1].renderToScreen = true
     }
-
 }

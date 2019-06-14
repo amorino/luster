@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import NukePass from '../../post/nukepass'
-import vertexShader from '../../shaders/glsl/fxaa.vert'
-import fragmentShader from '../../shaders/glsl/fxaa.frag'
+import vertexShader from '../glsl/fxaa.vert'
+import fragmentShader from '../glsl/fxaa.frag'
 
 export default class FXAA extends NukePass {
     constructor(options = {}) {

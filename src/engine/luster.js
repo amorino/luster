@@ -88,8 +88,7 @@ export default class World {
                 thicknessScale: { type: 'f', value: 4 },
                 thicknessDistortion: { type: 'f', value: 0.185 },
                 thicknessAmbient: { type: 'f', value: 0.0 },
-            }
-        )
+            })
 
         const material = new THREE.MeshStandardMaterial()
         material.uniforms = uniforms
@@ -107,5 +106,4 @@ export default class World {
 
         events.render.add(rotate)
     }
-
 }

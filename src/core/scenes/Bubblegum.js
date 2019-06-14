@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import bubblegumImg from '../../assets/images/bubblegum.png'
+import bubblegumImg from '../../assets/images/Bubblegum_01.png'
 
 export default class Bubblegum extends THREE.Object3D {
     constructor(display) {
