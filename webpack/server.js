@@ -19,7 +19,7 @@ const IP_ADRESS = '127.0.0.1'
 app.use(historyApi({ verbose: false }))
 
 app.use(devMiddleware(compiler, {
-    noInfo: true,
+    logLevel: 'warn',
     publicPath: config.output.publicPath,
     historyApiFallback: true,
     stats: {

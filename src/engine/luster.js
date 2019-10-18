@@ -35,8 +35,8 @@ export default class World {
         const { renderer } = this.display
 
         renderer.gammaFactor = 2.2
-        renderer.gammaOutput = false
-        renderer.gammaInput = false
+        renderer.gammaOutput = true
+        renderer.gammaInput = true
         renderer.sortObjects = false
 
         return this

@@ -1,4 +1,5 @@
-import EffectComposer, { RenderPass } from 'three-effectcomposer-es6'
+// import EffectComposer, { RenderPass } from '@johh/three-effectcomposer'
+import { EffectComposer, RenderPass } from 'postprocessing'
 import { remove } from 'lodash'
 import * as THREE from 'three'
 
@@ -40,27 +41,23 @@ export default class Nuke {
         this.depthMaterial.depthPacking = THREE.RGBADepthPacking
         this.depthMaterial.blending = THREE.NoBlending
 
-        // Setup the Effect Composer and add the RenderPass from the scene
-        this.composer = new EffectComposer(renderer, this.renderTarget)
+        this.composer = new EffectComposer(renderer)
         this.composer.addPass(new RenderPass(scene, camera))
     }
 
-    update = () => {
-        const { composer, renderer, scene, camera, renderTarget, depthMaterial } = this
+    update = (t, dt) => {
+        const { composer, renderer, scene, camera, depthMaterial } = this
         if (composer.passes.length > 0) {
-            scene.overrideMaterial = depthMaterial
-            renderer.render(scene, camera, renderTarget, true)
-            scene.overrideMaterial = null
-            composer.render()
-        } else {
-            renderer.render(scene, camera)
+            // scene.overrideMaterial = depthMaterial
+            // scene.overrideMaterial = null
+            // renderer.setRenderTarget(this.renderTarget)
+            // renderer.render(scene, camera)
+            composer.render(dt)
         }
     }
 
     add = (pass) => {
         const { composer } = this
-        composer.passes.forEach((p) => { p.renderToScreen = false })
-        composer.passes[composer.passes.length - 1].renderToScreen = true
         composer.addPass(pass)
     }
 

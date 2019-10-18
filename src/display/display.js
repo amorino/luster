@@ -1,5 +1,5 @@
-import OrbitControls from 'orbit-controls'
 import * as THREE from 'three'
+import OrbitControls from 'three-orbitcontrols'
 import Signal from 'signals'
 
 export default class Display {
@@ -12,10 +12,6 @@ export default class Display {
     }
 
     rendererOptions = {
-        alpha: false,
-        stencil: false,
-        depth: true,
-        preserveDrawingBuffer: false,
         antialias: false
     }
 
@@ -104,11 +100,9 @@ export default class Display {
         camera.lookAt(target)
         scene.add(camera)
 
-        this.controls = new OrbitControls({
-            position: [camera.position.x, camera.position.y, camera.position.z],
-            distanceBounds: [5, 20],
-        })
-
+        this.controls = new OrbitControls(camera, renderer.domElement)
+        this.controls.enableDamping = true
+        this.controls.dampingFactor = 0.25
         window.addEventListener('resize', _resize)
         _render()
     }
@@ -145,14 +139,7 @@ export default class Display {
     }
 
     _updateProjectionMatrix() {
-        const { size, controls, camera, target } = this
-
-        if (controls) {
-            controls.update()
-            camera.position.fromArray(controls.position)
-            camera.up.fromArray(controls.up)
-            camera.lookAt(target.fromArray(controls.direction))
-        }
+        const { size, camera } = this
 
         camera.aspect = size.aspect
         camera.updateProjectionMatrix()

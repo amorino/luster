@@ -27,9 +27,12 @@
   },
   "homepage": "https://github.com/amorino/luster#readme",
   "dependencies": {
-    "orbit-controls": "^1.1.2",
+    "@babel/core": "^7.6.4",
+    "@johh/three-effectcomposer": "^0.0.7",
+    "postprocessing": "^6.8.5",
     "signals": "^1.0.0",
-    "three": "^0.94.0"
+    "three": "^0.109.0",
+    "three-orbitcontrols": "^2.108.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -78,7 +81,7 @@
     "three-orbit-viewer": "^69.3.1",
     "url-loader": "^0.5.8",
     "webpack": "^4.16.0",
-    "webpack-dev-middleware": "^3.1.3",
+    "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.7.1"
   }
 }

@@ -1,8 +1,8 @@
 import * as THREE from 'three'
-import NukePass from '../../post/nukepass'
+import NukeShader from '../../post/nuke-shader'
 import fragmentShader from '../glsl/dof.frag'
 
-export default class DOF extends NukePass {
+export default class DOF extends NukeShader {
     constructor() {
         super({
             fragmentShader,

@@ -1,11 +1,13 @@
-import { ShaderPass, CopyShader } from 'three-effectcomposer-es6'
+// import { ShaderPass } from '@johh/three-effectcomposer'
+import { EffectPass, ShaderPass } from 'postprocessing'
+import * as THREE from 'three'
 
 import Nuke from './nuke'
+import NukePass from './nuke-pass'
 import FXAA from '../shaders/passes/fxaa'
 import DOF from '../shaders/passes/dof'
 import SSAO from '../shaders/passes/ssao'
-import overlay from '../assets/images/overlay.jpg'
-import { getTexture } from '../utils/3d'
+
 
 export default class FX {
     passes = []
@@ -43,41 +45,12 @@ export default class FX {
         const { nuke, passes } = this
         const { size, camera } = this.display
 
-        const FXAAShader = new FXAA()
-        this.fxaaPass = new ShaderPass(FXAAShader)
-        this.fxaaPass.active = true
-        passes.push(this.fxaaPass)
-
-        const DOFShader = new DOF({ size, camera })
-        this.dofPass = new ShaderPass(DOFShader)
-        this.dofPass.uniforms.tDepth.value = nuke.depthRenderTarget.texture
-        this.dofPass.uniforms.dirtMap.value = getTexture(overlay)
-        this.dofPass.uniforms.enableBlend.value = 1.0
-        this.dofPass.uniforms.enabled.value = 1.0
-        this.dofPass.active = true
-        passes.push(this.dofPass)
-
-        const SAOOShader = SSAO
-        this.ssaoPass = new ShaderPass(SAOOShader)
-        this.ssaoPass.uniforms.tDepth.value = nuke.depthRenderTarget.texture
-        this.ssaoPass.uniforms.size.value.set(size.width, size.height)
-        this.ssaoPass.uniforms.cameraNear.value = camera.near
-        this.ssaoPass.uniforms.cameraFar.value = camera.far
-        this.ssaoPass.uniforms.onlyAO.value = 0
-        this.ssaoPass.uniforms.aoClamp.value = 3.0
-        this.ssaoPass.uniforms.lumInfluence.value = 0.8
-        this.ssaoPass.active = true
-        passes.push(this.ssaoPass)
-
         return this
     }
 
     _setResolution() {
         const { passes } = this
         const { size } = this.display
-        passes.forEach((pass) => {
-            if (pass.uniforms.resolution) pass.uniforms.resolution.value.set(size.width, size.height)
-        })
 
         return this
     }
@@ -88,17 +61,14 @@ export default class FX {
             if (pass.active) nuke.add(pass)
         })
 
-        const copyPass = new ShaderPass(CopyShader)
-        nuke.add(copyPass)
-
         return this
     }
 
-    update = (t) => {
+    update = (t, dt) => {
         const { nuke } = this
-        nuke.update()
-        this.passes.forEach((pass) => {
-            if (pass.uniforms.time) pass.uniforms.time.value = t / 1000
-        })
+        nuke.update(t, dt)
+        // this.passes.forEach((pass) => {
+        //     if (pass.uniform.time) pass.uniform.time.value = t / 1000
+        // })
     }
 }
