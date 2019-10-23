@@ -1,4 +1,3 @@
-// import EffectComposer, { RenderPass } from '@johh/three-effectcomposer'
 import { EffectComposer, RenderPass } from 'postprocessing'
 import { remove } from 'lodash'
 import * as THREE from 'three'
@@ -42,16 +41,13 @@ export default class Nuke {
         this.depthMaterial.blending = THREE.NoBlending
 
         this.composer = new EffectComposer(renderer)
-        this.composer.addPass(new RenderPass(scene, camera))
+        this.renderPass = new RenderPass(scene, camera)
+        this.composer.addPass(this.renderPass)
     }
 
     update = (t, dt) => {
-        const { composer, renderer, scene, camera, depthMaterial } = this
+        const { composer } = this
         if (composer.passes.length > 0) {
-            // scene.overrideMaterial = depthMaterial
-            // scene.overrideMaterial = null
-            // renderer.setRenderTarget(this.renderTarget)
-            // renderer.render(scene, camera)
             composer.render(dt)
         }
     }
@@ -61,10 +57,15 @@ export default class Nuke {
         composer.addPass(pass)
     }
 
-    remove = (pass) => {
+    arrange = () => {
         const { composer } = this
-        remove(composer.passes, a => a === pass)
         composer.passes.forEach((p) => { p.renderToScreen = false })
         composer.passes[composer.passes.length - 1].renderToScreen = true
+    }
+
+    remove = (pass) => {
+        const { composer, arrange } = this
+        remove(composer.passes, a => a === pass)
+        arrange()
     }
 }

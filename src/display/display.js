@@ -24,7 +24,7 @@ export default class Display {
         fieldOfView = 30,
         near = 1,
         far = 50,
-        clearColor = 0x0,
+        clearColor = 0x000fff,
         clearAlpha = 1,
         target = new THREE.Vector3(),
         position = new THREE.Vector3(0, 0, 5)

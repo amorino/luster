@@ -1,13 +1,8 @@
-// import { ShaderPass } from '@johh/three-effectcomposer'
-import { EffectPass, ShaderPass } from 'postprocessing'
 import * as THREE from 'three'
-
+import { EffectPass, SMAAEffect, ChromaticAberrationEffect, BrightnessContrastEffect } from 'postprocessing'
 import Nuke from './nuke'
-import NukePass from './nuke-pass'
-import FXAA from '../shaders/passes/fxaa'
-import DOF from '../shaders/passes/dof'
-import SSAO from '../shaders/passes/ssao'
-
+import DofEffect from '../effects/dof-effect'
+import overlay from '../assets/images/overlay.jpg'
 
 export default class FX {
     passes = []
@@ -22,53 +17,107 @@ export default class FX {
     constructor(display) {
         if (!display.renderer) console.error('FX :: Must define a renderer')
         this.display = display
-        this.fxaaPass = null
-        this.dofPass = null
         this._init()
     }
 
     _init() {
-        this
-            ._setupNuke()
+        this._setupAssets().then(this._setup)
+    }
+
+    _setup = () => {
+        this._setupNuke()
             ._setupPasses()
-            ._setResolution()
             ._addPasses()
     }
 
-    _setupNuke() {
+    _setupAssets = () => {
+        this.assets = new Map()
+        const loadingManager = new THREE.LoadingManager()
+        const textureLoader = new THREE.TextureLoader(loadingManager)
+
+        return new Promise((resolve, reject) => {
+            loadingManager.onError = reject
+            loadingManager.onProgress = (item, loaded, total) => {
+                if (loaded === total) {
+                    resolve()
+                }
+            }
+
+            textureLoader.load(overlay, (texture) => {
+                this.assets.set('overlay', texture)
+            })
+
+            const searchImage = new Image()
+            const areaImage = new Image()
+
+            searchImage.addEventListener('load', () => {
+                this.assets.set('smaa-search', this)
+                loadingManager.itemEnd('smaa-search')
+            })
+
+            areaImage.addEventListener('load', () => {
+                this.assets.set('smaa-area', this)
+                loadingManager.itemEnd('smaa-area')
+            })
+
+            loadingManager.itemStart('smaa-search')
+            loadingManager.itemStart('smaa-area')
+
+            searchImage.src = SMAAEffect.searchImageDataURL
+            areaImage.src = SMAAEffect.areaImageDataURL
+        })
+    }
+
+    _setupNuke = () => {
         const { renderer, size, camera, scene } = this.display
         this.nuke = new Nuke({ renderer, camera, size, scene })
         return this
     }
 
-    _setupPasses() {
-        const { nuke, passes } = this
-        const { size, camera } = this.display
+    _setupPasses = () => {
+        const { camera } = this.display
 
+        const smaaEffect = new SMAAEffect(
+            this.assets.get('smaa-search'),
+            this.assets.get('smaa-area')
+        )
+        smaaEffect.active = true
+        const smaaPass = new EffectPass(camera, smaaEffect)
+        this.passes.push(smaaPass)
+
+        const dofEffect = new DofEffect(this.assets.get('overlay'))
+        const dofPass = new EffectPass(camera, dofEffect)
+        dofPass.active = true
+        this.passes.push(dofPass)
+
+        const chromaticAberrationEffect = new ChromaticAberrationEffect()
+        const brightnessEffect = new BrightnessContrastEffect({ brightness: 0.1, contrast: 0.1 })
+
+        const effectPass = new EffectPass(
+            camera,
+            brightnessEffect,
+            chromaticAberrationEffect,
+        )
+
+        chromaticAberrationEffect.offset.multiplyScalar(2.0)
+        effectPass.active = true
+        this.passes.push(effectPass)
         return this
     }
 
-    _setResolution() {
-        const { passes } = this
-        const { size } = this.display
-
-        return this
-    }
-
-    _addPasses() {
+    _addPasses = () => {
         const { nuke } = this
         this.passes.forEach((pass) => {
             if (pass.active) nuke.add(pass)
         })
-
+        nuke.arrange()
         return this
     }
 
     update = (t, dt) => {
         const { nuke } = this
-        nuke.update(t, dt)
-        // this.passes.forEach((pass) => {
-        //     if (pass.uniform.time) pass.uniform.time.value = t / 1000
-        // })
+        if (nuke) {
+            nuke.update(t, dt)
+        }
     }
 }

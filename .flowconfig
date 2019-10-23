@@ -17,6 +17,7 @@ module.system=haste
 munge_underscores=true
 
 module.file_ext=.js
+module.file_ext=.styl
 module.file_ext=.json
 
 suppress_type=$FlowIssue
