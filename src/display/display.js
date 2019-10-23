@@ -17,7 +17,7 @@ export default class Display {
 
     nuke = false
 
-    dpr = Math.min(1)
+    dpr = window.devicePixelRatio
 
     constructor({
         container,

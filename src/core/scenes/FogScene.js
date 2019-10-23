@@ -17,15 +17,16 @@ export default class FogScene extends THREE.Object3D {
         this.sideTime = 0
         this.sideDelay = 6
         this.currentSideIndex = 0
-        this.currentSideCount = this.sideCountList[0]
+        const [currentSideCount] = this.sideCountList
+        this.currentSideCount = currentSideCount
         this._setup()
     }
 
     _setup() {
         this
-        ._setupLights()
-        ._setupSkybox()
-        ._updateFog()
+            ._setupLights()
+            ._setupSkybox()
+            ._updateFog()
     }
 
     _setupLights() {
@@ -75,7 +76,7 @@ export default class FogScene extends THREE.Object3D {
         const pointLight = this.pointLights[0]
         pointLight.updateMatrixWorld()
 
-        const camera = this.app.camera
+        const { camera } = this.app
         camera.updateMatrixWorld()
         this.traverse((child) => {
             if (!child.material || !child.material.uniforms) return
@@ -101,5 +102,4 @@ export default class FogScene extends THREE.Object3D {
     update = () => {
         this._updateFog()
     }
-
 }
