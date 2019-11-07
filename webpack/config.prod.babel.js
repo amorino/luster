@@ -18,11 +18,10 @@ module.exports = base({
         chunkFilename: 'js/[name].js?[hash]',
         publicPath: '/',
     },
-    // In production, we skip all hot-reloading stuff
     entry: {
         main: [
             'babel-polyfill',
-            path.join(__dirname, '..', 'src/main.js'), // Start with js/app.js
+            path.join(__dirname, '..', 'src/main.js'),
         ],
     },
     optimization: {

@@ -13,7 +13,7 @@ export default class DofEffect extends Effect {
                 ['enabled', new Uniform(1.0)],
                 ['enableBlend', new Uniform(1.0)],
                 ['dirtMap', new Uniform(texture)],
-                ['hover', new Uniform(100.0)]
+                ['hover', new Uniform(1.0)]
             ])
         })
     }

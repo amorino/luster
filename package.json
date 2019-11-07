@@ -5,8 +5,8 @@
   "main": "src/main.js",
   "scripts": {
     "clean": "rimraf build",
-    "build": "npm run clean && npm run build:webpack && open .",
-    "build:webpack": "NODE_ENV=production webpack --config webpack/webpack.config.production.babel.js --progress --colors -p",
+    "build": "npm run clean && npm run build:webpack",
+    "build:webpack": "NODE_ENV=production webpack --config webpack/config.prod.babel.js --progress --colors -p",
     "dev": "NODE_ENV=development node -r babel-register webpack/server.js",
     "start": "npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -54,7 +54,7 @@
     "exports-loader": "^0.6.3",
     "express": "^4.13.4",
     "file-loader": "^1.1.11",
-    "flow-bin": "^0.76.0",
+    "flow-bin": "0.76.0",
     "glsl-hash-blur": "^1.0.3",
     "glsl-inject-defines": "^1.0.3",
     "glslify-loader": "^1.0.2",
@@ -81,6 +81,7 @@
     "three-orbit-viewer": "^69.3.1",
     "url-loader": "^0.5.8",
     "webpack": "^4.16.0",
+    "webpack-cli": "^3.3.10",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.7.1"
   }

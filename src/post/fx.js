@@ -87,7 +87,7 @@ export default class FX {
 
         const dofEffect = new DofEffect(this.assets.get('overlay'))
         const dofPass = new EffectPass(camera, dofEffect)
-        dofPass.active = true
+        dofPass.active = false
         this.passes.push(dofPass)
 
         const chromaticAberrationEffect = new ChromaticAberrationEffect()
