@@ -5951,9 +5951,9 @@ three-orbit-viewer@^69.3.1:
     three-orbit-controls "~0.69.0"
     xtend "^4.0.0"
 
-three@^0.125.0:
-  version "0.125.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.125.0.tgz#19e922b9dc51ad0b706893aeee888de68e99850a"
+three@^0.137.0:
+  version "0.137.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.137.0.tgz#0ebd6ba66637a332c31f234bcdd35aeec071a6e3"
 
 through2@^0.6.3:
   version "0.6.5"

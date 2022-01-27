@@ -29,7 +29,7 @@
   "dependencies": {
     "orbit-controls": "^1.1.2",
     "signals": "^1.0.0",
-    "three": "^0.125.0"
+    "three": "^0.137.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
